@@ -1,11 +1,16 @@
 import Post from './Post';
+import PropTypes from 'prop-types';
 
-function List() {
+export default function List({ posts }) {
   return (
     <ul>
-      <Post />
+      {posts && posts.length > 0
+        ? posts.map((post) => <Post key={post.id} post={post} />)
+        : null}
     </ul>
   );
 }
 
-export default List;
+List.propTypes = {
+  posts: PropTypes.array,
+};
