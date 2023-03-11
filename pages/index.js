@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { prisma } from '../utils/prisma';
 import Form from '../components/Form';
 import Layout from '../components/Layout';
@@ -7,14 +8,16 @@ import PropTypes from 'prop-types';
 export default function Home({ posts }) {
   const parsedPosts = JSON.parse(posts);
 
+  const [allPosts, setAllPosts] = useState(parsedPosts);
+
   return (
     <Layout
       title='uninot | Share with the world'
       description='This app allows you to share your thoughts easily'
     >
       <section className='max-w-screen-md mx-auto pt-10'>
-        <Form />
-        <List posts={parsedPosts} />
+        <Form onSubmit={setAllPosts} posts={allPosts} />
+        <List posts={allPosts} />
       </section>
     </Layout>
   );
@@ -28,9 +31,6 @@ export async function getServerSideProps() {
   const posts = await prisma.post.findMany({
     include: {
       author: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
     },
   });
 
